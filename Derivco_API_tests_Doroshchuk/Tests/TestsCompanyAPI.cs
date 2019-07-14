@@ -16,7 +16,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
     [TestFixture]
     public class TestsCompanyAPI : BaseTestsAPI
     {
-        [TestCase("TestCompany1", TestName = "Verify creating of the company with id 1")]
+        [TestCase("TestCompany1")]
         public void CreateCompany_StatusCodeIsOK_ValidCompanyNameIsGiven(string companyName)
         {
             // arrange
@@ -34,6 +34,27 @@ namespace Derivco_API_tests_Doroshchuk.Tests
 
             // assert
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        }
+
+        [TestCase("TestCompany2")]
+        public void CreateCompany_StatusCodeIsBadRequest_ExistedCompanyNameIsGiven(string companyName)
+        {
+            // arrange
+            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestRequest request = new RestRequest("/companies", Method.POST);
+
+            // act
+            request.AddHeader("authorization", "Bearer " + _token);
+            request.AddJsonBody(
+                new
+                {
+                    Name = companyName
+                });
+            client.Execute(request);
+            IRestResponse response = client.Execute(request);
+
+            // assert
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
         }
 
         [Test]
