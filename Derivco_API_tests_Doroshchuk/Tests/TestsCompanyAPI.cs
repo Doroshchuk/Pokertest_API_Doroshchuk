@@ -1,8 +1,5 @@
 ﻿using Derivco_API_tests_Doroshchuk.DataEntity;
-using Derivco_API_tests_Doroshchuk.Helpers;
 using Derivco_API_tests_Doroshchuk.Resource;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using RestSharp;
 using RestSharp.Serialization.Json;
