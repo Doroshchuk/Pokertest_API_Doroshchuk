@@ -136,41 +136,35 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             Assert.AreEqual(companyName, companyResponse.Name);
         }
 
-        [TestCase(11, HttpStatusCode.OK)]
-        [TestCase(12, HttpStatusCode.OK)]
-        [TestCase(-5, HttpStatusCode.NotFound)]
-        [Order(9)]
-        public void DeleteCompanyById_VerifyStatusCode(int companyId, HttpStatusCode expectedHttpStatusCode)
+        [TestCase(-5)]
+        public void DeleteCompanyById_StatusCodeIsNotFound_InvaliIdIsGiven(int companyId)
         {
-            // arrange
-            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
-            RestRequest request = new RestRequest($"/companies/id/{companyId}", Method.DELETE);
+            IRestResponse response = _resource.DeleteById(companyId);
 
-            // act
-            request.AddHeader("authorization", "Bearer " + _token);
-            IRestResponse response = client.Execute(request);
-
-            // assert
-            Assert.That(response.StatusCode, Is.EqualTo(expectedHttpStatusCode));
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
 
-        [TestCase(13)]
-        [Order(10)]
-        public void DeleteCompanyById_VerifyCompanyIsDeleted(int companyId)
+        [Test]
+        public void DeleteCompanyById_StatusCodeIsOK_ValiIdIsGiven()
         {
-            // arrange
-            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
-            RestRequest deleteRequest = new RestRequest($"/companies/id/{companyId}", Method.DELETE);
-            RestRequest getRequest = new RestRequest($"/companies/id/{companyId}", Method.GET);
+            string companyName = "TestCompany";
+            _resource.Create(companyName);
+            int companyId = _resource.GetCompanyIdByName(companyName);
+            IRestResponse response = _resource.DeleteById(companyId);
 
-            // act
-            deleteRequest.AddHeader("authorization", "Bearer " + _token);
-            getRequest.AddHeader("authorization", "Bearer " + _token);
-            client.Execute(deleteRequest);
-            IRestResponse response = client.Execute(getRequest);
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        }
 
-            // assert
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        [Test]
+        public void DeleteCompanyById_VerifyCompanyIsDeleted_ValidIdIsGiven()
+        {
+            string companyName = "TestCompany";
+            _resource.Create(companyName);
+            int companyId = _resource.GetCompanyIdByName(companyName);
+            IRestResponse response = _resource.DeleteById(companyId);
+            List<Company> actualCompanyList = _resource.GetCompanies();
+
+            Assert.IsFalse(actualCompanyList.Exists(x => x.Name == companyName));
         }
     }
 }
