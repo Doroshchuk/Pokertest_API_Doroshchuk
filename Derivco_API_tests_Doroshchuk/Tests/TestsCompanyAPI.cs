@@ -80,5 +80,23 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             var actualCompanyList = JsonConvert.DeserializeObject<List<Company>>(jsonResponse.ToString());
             Assert.True(actualCompanyList.SequenceEqual(expectedCompanyList));
         }
+
+        [Test]
+        public void GetCompanyById_ActualCompanyNameAsExpected_ValidIdIsGiven()
+        {
+            // arrange
+            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestRequest request = new RestRequest($"/companies/id/{1}", Method.GET);
+
+            // act
+            request.AddHeader("authorization", "Bearer " + _token);
+            IRestResponse response = client.Execute(request);
+            Company companyResponse =
+                        new JsonDeserializer().
+                                Deserialize<Company>(response);
+
+            // assert
+            Assert.AreEqual("TestCompany", companyResponse.Name);
+        }
     }
 }
