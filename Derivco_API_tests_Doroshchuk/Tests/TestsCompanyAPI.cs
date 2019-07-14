@@ -82,6 +82,32 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
         }
 
+        [TestCase("TestCompany3")]
+        public void CreateCompany_CompanyIsAdddedOnce_ExistedCompanyNameIsGiven(string companyName)
+        {
+            // arrange
+            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestRequest createRequest = new RestRequest("/companies", Method.POST);
+            RestRequest getAllRequest = new RestRequest("/companies", Method.GET);
+
+            // act
+            createRequest.AddHeader("authorization", "Bearer " + _token);
+            getAllRequest.AddHeader("authorization", "Bearer " + _token);
+            createRequest.AddJsonBody(
+                new
+                {
+                    Name = companyName
+                });
+            client.Execute(createRequest);
+            client.Execute(createRequest);
+            IRestResponse response = client.Execute(getAllRequest);
+            JArray jsonResponse = (JArray)JsonConvert.DeserializeObject(response.Content);
+            var actualCompanyList = JsonConvert.DeserializeObject<List<Company>>(jsonResponse.ToString());
+
+            // assert
+            Assert.AreEqual(actualCompanyList.FindAll(x => x.Name == companyName).Count(), 1);
+        }
+
         [Test]
         public void GetAllCompanies_StatusCodeIsOK()
         {
