@@ -24,5 +24,7 @@ namespace Derivco_API_tests_Doroshchuk.DataEntity
             Company company = (Company)obj;
             return (Id == company.Id) && (Name == company.Name);
         }
+
+        public override int GetHashCode() => Id;
     }
 }
