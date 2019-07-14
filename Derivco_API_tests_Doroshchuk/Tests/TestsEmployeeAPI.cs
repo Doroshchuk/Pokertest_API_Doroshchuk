@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Derivco_API_tests_Doroshchuk.Tests
 {
     [TestFixture]
-    public class TestsEmployeeAPI : BaseTestsAPI
+    public class TestsEmployeeAPI : BaseTestAPI
     {
         private EmployeeResource _resource;
 

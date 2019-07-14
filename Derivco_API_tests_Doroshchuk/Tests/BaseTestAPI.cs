@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Derivco_API_tests_Doroshchuk.Tests
 {
     [SetUpFixture]
-    public class BaseTestsAPI
+    public class BaseTestAPI
     {
         protected string _token;
 
