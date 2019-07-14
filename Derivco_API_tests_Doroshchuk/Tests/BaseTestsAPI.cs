@@ -26,7 +26,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             IRestResponse response = client.Execute(request);
 
             dynamic api = JObject.Parse(response.Content);
-            var access_token = api.access_token;
+            _token = api.access_token;
         }
 
         [OneTimeTearDown]
