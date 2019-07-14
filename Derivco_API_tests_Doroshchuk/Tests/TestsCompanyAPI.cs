@@ -41,77 +41,30 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         }
 
         [TestCase("TestCompany2")]
-        [Order(2)]
         public void CreateCompany_CompanyIsAdded_ValidCompanyNameIsGiven(string companyName)
         {
-            // arrange
-            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
-            RestRequest createRequest = new RestRequest("/companies", Method.POST);
-            RestRequest getAllRequest = new RestRequest("/companies", Method.GET);
+            _resource.Create(companyName);
+            List<Company> actualCompanyList = _resource.GetCompanies();
 
-            // act
-            createRequest.AddHeader("authorization", "Bearer " + _token);
-            getAllRequest.AddHeader("authorization", "Bearer " + _token);
-            createRequest.AddJsonBody(
-                new
-                {
-                    Name = companyName
-                });
-            client.Execute(createRequest);
-            IRestResponse response = client.Execute(getAllRequest);
-            JArray jsonResponse = (JArray)JsonConvert.DeserializeObject(response.Content);
-            var actualCompanyList = JsonConvert.DeserializeObject<List<Company>>(jsonResponse.ToString());
-
-            // assert
             Assert.IsTrue(actualCompanyList.Exists(x => x.Name == companyName));
         }
 
         [TestCase("TestCompany3")]
-        [Order(3)]
         public void CreateCompany_StatusCodeIsBadRequest_ExistedCompanyNameIsGiven(string companyName)
         {
-            // arrange
-            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
-            RestRequest request = new RestRequest("/companies", Method.POST);
+            _resource.Create(companyName);
+            IRestResponse response = _resource.Create(companyName);
 
-            // act
-            request.AddHeader("authorization", "Bearer " + _token);
-            request.AddJsonBody(
-                new
-                {
-                    Name = companyName
-                });
-            client.Execute(request);
-            IRestResponse response = client.Execute(request);
-
-            // assert
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
         }
 
         [TestCase("TestCompany3")]
-        [Order(4)]
         public void CreateCompany_CompanyIsAdddedOnce_ExistedCompanyNameIsGiven(string companyName)
         {
-            // arrange
-            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
-            RestRequest createRequest = new RestRequest("/companies", Method.POST);
-            RestRequest getAllRequest = new RestRequest("/companies", Method.GET);
+            _resource.Create(companyName);
+            _resource.Create(companyName);
+            List<Company> actualCompanyList = _resource.GetCompanies();
 
-            // act
-            createRequest.AddHeader("authorization", "Bearer " + _token);
-            getAllRequest.AddHeader("authorization", "Bearer " + _token);
-            createRequest.AddJsonBody(
-                new
-                {
-                    Name = companyName
-                });
-            client.Execute(createRequest);
-            client.Execute(createRequest);
-            IRestResponse response = client.Execute(getAllRequest);
-            JArray jsonResponse = (JArray)JsonConvert.DeserializeObject(response.Content);
-            var actualCompanyList = JsonConvert.DeserializeObject<List<Company>>(jsonResponse.ToString());
-
-            // assert
             Assert.AreEqual(actualCompanyList.FindAll(x => x.Name == companyName).Count(), 1);
         }
 
