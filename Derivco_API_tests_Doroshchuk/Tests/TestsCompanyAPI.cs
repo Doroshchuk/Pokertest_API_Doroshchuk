@@ -37,6 +37,31 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         }
 
         [TestCase("TestCompany2")]
+        public void CreateCompany_CompanyIsAdded_ValidCompanyNameIsGiven(string companyName)
+        {
+            // arrange
+            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestRequest createRequest = new RestRequest("/companies", Method.POST);
+            RestRequest getAllRequest = new RestRequest("/companies", Method.GET);
+
+            // act
+            createRequest.AddHeader("authorization", "Bearer " + _token);
+            getAllRequest.AddHeader("authorization", "Bearer " + _token);
+            createRequest.AddJsonBody(
+                new
+                {
+                    Name = companyName
+                });
+            client.Execute(createRequest);
+            IRestResponse response = client.Execute(getAllRequest);
+            JArray jsonResponse = (JArray)JsonConvert.DeserializeObject(response.Content);
+            var actualCompanyList = JsonConvert.DeserializeObject<List<Company>>(jsonResponse.ToString());
+
+            // assert
+            Assert.IsTrue(actualCompanyList.Exists(x => x.Name == companyName));
+        }
+
+        [TestCase("TestCompany2")]
         public void CreateCompany_StatusCodeIsBadRequest_ExistedCompanyNameIsGiven(string companyName)
         {
             // arrange
