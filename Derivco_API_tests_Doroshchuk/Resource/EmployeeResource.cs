@@ -28,7 +28,7 @@ namespace Derivco_API_tests_Doroshchuk.Resource
         {
             var response = GetAll();
             JArray jsonResponse = (JArray)JsonConvert.DeserializeObject(response.Content);
-            return JsonConvert.DeserializeObject<List<Employee>>(jsonResponse.ToString());
+            return jsonResponse != null ? JsonConvert.DeserializeObject<List<Employee>>(jsonResponse.ToString()) : new List<Employee>();
         }
 
         // TODO : replace with DeleteAll() api method when it will be ready

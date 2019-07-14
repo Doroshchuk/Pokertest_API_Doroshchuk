@@ -23,6 +23,12 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             _resource = new EmployeeResource(_token);
         }
 
+        [SetUp]
+        public void RunBeforeEachTest()
+        {
+            _resource.Token = _token;
+        }
+
         [TearDown]
         public void RunAfterEachTest()
         {
@@ -37,6 +43,14 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
+        [TestCase("TestEmployee1")]
+        public void CreateEmployee_StatusCodeIsUnauthorized_EmptyTokenIsGiven(string employeeName)
+        {
+            _resource.Token = "";
+            IRestResponse response = _resource.Create(employeeName);
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+        }
 
         [TestCase("TestEmployee2")]
         public void CreateEmployee_EmployeeIsAdded_ValidEmployeeNameIsGiven(string employeeName)
@@ -75,6 +89,15 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         }
 
         [Test]
+        public void GetAllEmployees_StatusCodeIsUnauthorized_EmptyTokenIsGiven()
+        {
+            _resource.Token = "";
+            IRestResponse response = _resource.GetAll();
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+        }
+
+        [Test]
         public void GetAllEmployees_IsTrue_ActualEmployeeListEqualsExpectedEmployeeList()
         {
             var employeeList = new List<Employee>()
@@ -110,6 +133,15 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         }
 
         [Test]
+        public void GetEmployeeById_StatusCodeIsUnauthorized_EmptyTokenIsGiven()
+        {
+            _resource.Token = "";
+            IRestResponse response = _resource.GetById(1); ;
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+        }
+
+        [Test]
         public void GetEmployeeById_StatusCodeIsOK_ValidIdIsGiven()
         {
             string employeeName = "TestEmployee";
@@ -140,6 +172,15 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             IRestResponse response = _resource.DeleteById(employeeId);
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        }
+
+        [Test]
+        public void DeleteEmployeeById_StatusCodeIsUnauthorized_EmptyTokenIsGiven()
+        {
+            _resource.Token = "";
+            IRestResponse response = _resource.DeleteById(1);
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
         }
 
         [Test]
