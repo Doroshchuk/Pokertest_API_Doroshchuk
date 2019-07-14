@@ -102,40 +102,37 @@ namespace Derivco_API_tests_Doroshchuk.Tests
                             && actualCompanyList.All(companyList.Contains));
         }
 
-        [TestCase(11, HttpStatusCode.OK, TestName = "Verify 'OK' status code for company with id 11")]
-        [TestCase(0, HttpStatusCode.NotFound, TestName = "Verify 'Not Found' status code for company with id 0")]
-        [TestCase(-5, HttpStatusCode.NotFound, TestName = "Verify 'Not Found' status code for company with id -5")]
-        [Order(7)]
-        public void GetCompanyById_VerifyStatusCode(int companyId, HttpStatusCode expectedHttpStatusCode)
+        [TestCase(0)]
+        [TestCase(-5)]
+        public void GetCompanyById_StatusCodeIsNotFound_InvalidIdIsGiven(int companyId)
         {
-            // arrange
-            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
-            RestRequest request = new RestRequest($"/companies/id/{companyId}", Method.GET);
+            IRestResponse response = _resource.GetById(companyId); ;
 
-            // act
-            request.AddHeader("authorization", "Bearer " + _token);
-            IRestResponse response = client.Execute(request);
-
-            // assert
-            Assert.That(response.StatusCode, Is.EqualTo(expectedHttpStatusCode));
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
 
-        [TestCase(11, "TestCompany1")]
-        [Order(8)]
-        public void GetCompanyById_ActualCompanyNameAsExpected_ValidIdIsGiven(int companyId, string companyName)
+        [Test]
+        public void GetCompanyById_StatusCodeIsOK_ValidIdIsGiven()
         {
-            // arrange
-            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
-            RestRequest request = new RestRequest($"/companies/id/{companyId}", Method.GET);
+            string companyName = "TestCompany";
+            _resource.Create(companyName);
+            int companyId = _resource.GetCompanyIdByName(companyName);
+            IRestResponse response = _resource.GetById(companyId);
 
-            // act
-            request.AddHeader("authorization", "Bearer " + _token);
-            IRestResponse response = client.Execute(request);
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        }
+
+        [Test]
+        public void GetCompanyById_CompanyNameAsExpected_ValidIdIsGiven()
+        {
+            string companyName = "TestCompany";
+            _resource.Create(companyName);
+            int companyId = _resource.GetCompanyIdByName(companyName);
+            IRestResponse response = _resource.GetById(companyId);
             Company companyResponse =
                         new JsonDeserializer().
                                 Deserialize<Company>(response);
 
-            // assert
             Assert.AreEqual(companyName, companyResponse.Name);
         }
 
