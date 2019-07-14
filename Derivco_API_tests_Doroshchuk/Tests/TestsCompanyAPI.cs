@@ -37,6 +37,21 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         }
 
         [Test]
+        public void GetAllCompanies_StatusCodeIsOK()
+        {
+            // arrange
+            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestRequest request = new RestRequest("/companies", Method.GET);
+
+            // act
+            request.AddHeader("authorization", "Bearer " + _token);
+            IRestResponse response = client.Execute(request);
+
+            // assert
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        }
+
+        [Test]
         public void GetAllCompanies_IsTrue_ActualCompanyListIsEqualToExpectedCompanyList()
         {
             var expectedCompanyList = new List<Company>()
