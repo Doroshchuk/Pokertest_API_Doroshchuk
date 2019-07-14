@@ -81,6 +81,23 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             Assert.True(actualCompanyList.SequenceEqual(expectedCompanyList));
         }
 
+        [TestCase(1, HttpStatusCode.OK, TestName = "Verify 'OK' status code for company with id 1")]
+        [TestCase(0, HttpStatusCode.NotFound, TestName = "Verify 'Not Found' status code for company with id 0")]
+        [TestCase(-5, HttpStatusCode.NotFound, TestName = "Verify 'Not Found' status code for company with id -5")]
+        public void GetCompanyById_VerifyStatusCode(int companyId, HttpStatusCode expectedHttpStatusCode)
+        {
+            // arrange
+            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestRequest request = new RestRequest($"/companies/id/{companyId}", Method.GET);
+
+            // act
+            request.AddHeader("authorization", "Bearer " + _token);
+            IRestResponse response = client.Execute(request);
+
+            // assert
+            Assert.That(response.StatusCode, Is.EqualTo(expectedHttpStatusCode));
+        }
+
         [Test]
         public void GetCompanyById_ActualCompanyNameAsExpected_ValidIdIsGiven()
         {
