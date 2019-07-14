@@ -28,6 +28,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
 
             dynamic api = JObject.Parse(response.Content);
             _token = api.access_token;
+            // TODO : check for token is not accepted
         }
 
         [OneTimeTearDown]

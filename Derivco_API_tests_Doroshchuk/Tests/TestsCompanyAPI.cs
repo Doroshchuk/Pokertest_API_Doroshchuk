@@ -23,6 +23,12 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             _resource = new CompanyResource(_token);
         }
 
+        [SetUp]
+        public void RunBeforeEachTest()
+        {
+            _resource.Token = _token;
+        }
+
         [TearDown]
         public void RunAfterEachTest()
         {
@@ -35,6 +41,15 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             IRestResponse response = _resource.Create(companyName);
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        }
+
+        [TestCase("TestCompany1")]
+        public void CreateCompany_StatusCodeIsUnauthorized_ValidCompanyNameAndEmptyTokenAreGiven(string companyName)
+        {
+            _resource.Token = "";
+            IRestResponse response = _resource.Create(companyName);
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
         }
 
         [TestCase("TestCompany2")]
@@ -74,6 +89,15 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         }
 
         [Test]
+        public void GetAllCompanies_StatusCodeIsUnauthorized_EmptyTokenIsGiven()
+        {
+            _resource.Token = "";
+            IRestResponse response = _resource.GetAll();
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+        }
+
+        [Test]
         public void GetAllCompanies_IsTrue_ActualCompanyListEqualsExpectedCompanyList()
         {
             var companyList = new List<Company>()
@@ -103,9 +127,18 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         [TestCase(-5)]
         public void GetCompanyById_StatusCodeIsNotFound_InvalidIdIsGiven(int companyId)
         {
-            IRestResponse response = _resource.GetById(companyId); ;
+            IRestResponse response = _resource.GetById(companyId);
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        }
+
+        [Test]
+        public void GetCompanyById_StatusCodeIsUnauthorized_EmptyTokenIsGiven()
+        {
+            _resource.Token = "";
+            IRestResponse response = _resource.GetById(1);
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
         }
 
         [Test]
@@ -139,6 +172,15 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             IRestResponse response = _resource.DeleteById(companyId);
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        }
+
+        [Test]
+        public void DeleteCompanyById_StatusCodeIsUnauthorized_EmptyTokenIsGiven()
+        {
+            _resource.Token = "";
+            IRestResponse response = _resource.DeleteById(1);
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
         }
 
         [Test]

@@ -13,12 +13,12 @@ namespace Derivco_API_tests_Doroshchuk.Resource
         private string _baseURL = $"{Constant.BaseURL}/api/automation";
         private string _resourcePath;
         private RestClient _client;
-        private string _token;
+        public string Token { get; set; }
 
         public Resource(string token, string resourcePath)
         {
             _client = new RestClient(_baseURL);
-            _token = token;
+            Token = token;
             _resourcePath = resourcePath;
         }
 
@@ -26,7 +26,7 @@ namespace Derivco_API_tests_Doroshchuk.Resource
         {
             RestRequest request = new RestRequest(_resourcePath, Method.POST);
 
-            request.AddHeader("authorization", "Bearer " + _token);
+            request.AddHeader("authorization", "Bearer " + Token);
             request.AddJsonBody(
                 new
                 {
@@ -39,7 +39,7 @@ namespace Derivco_API_tests_Doroshchuk.Resource
         {
             RestRequest request = new RestRequest(_resourcePath, Method.GET);
 
-            request.AddHeader("authorization", "Bearer " + _token);
+            request.AddHeader("authorization", "Bearer " + Token);
             return _client.Execute(request);
         }
 
@@ -47,7 +47,7 @@ namespace Derivco_API_tests_Doroshchuk.Resource
         {
             RestRequest request = new RestRequest($"{_resourcePath}/id/{id}", Method.GET);
 
-            request.AddHeader("authorization", "Bearer " + _token);
+            request.AddHeader("authorization", "Bearer " + Token);
             return _client.Execute(request);
         }
 
@@ -55,7 +55,7 @@ namespace Derivco_API_tests_Doroshchuk.Resource
         {
             RestRequest request = new RestRequest($"{_resourcePath}/id/{id}", Method.DELETE);
 
-            request.AddHeader("authorization", "Bearer " + _token);
+            request.AddHeader("authorization", "Bearer " + Token);
             return _client.Execute(request);
         }
 
