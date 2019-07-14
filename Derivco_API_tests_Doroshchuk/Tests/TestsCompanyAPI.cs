@@ -17,7 +17,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
     public class TestsCompanyAPI : BaseTestsAPI
     {
         [Test]
-        public void CreateCompanyTest()
+        public void CreateCompany_StatusCodeAsExpected()
         {
             // arrange
             RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
@@ -37,7 +37,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         }
 
         [Test]
-        public void GetCompaniesTest()
+        public void GetAllCompanies_IsTrue_ActualCompanyListIsEqualToExpectedCompanyList()
         {
             var expectedCompanyList = new List<Company>()
             {
