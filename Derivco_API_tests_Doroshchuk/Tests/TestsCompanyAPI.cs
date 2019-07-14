@@ -124,7 +124,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         }
 
         [Test]
-        public void GetAllCompanies_IsTrue_ActualCompanyListIsEqualToExpectedCompanyList()
+        public void GetAllCompanies_IsTrue_ActualCompanyListEqualsExpectedCompanyList()
         {
             var expectedCompanyList = new List<Company>()
             {
@@ -170,12 +170,12 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             Assert.That(response.StatusCode, Is.EqualTo(expectedHttpStatusCode));
         }
 
-        [Test]
-        public void GetCompanyById_ActualCompanyNameAsExpected_ValidIdIsGiven()
+        [TestCase(1, "TestCompany")]
+        public void GetCompanyById_ActualCompanyNameAsExpected_ValidIdIsGiven(int companyId, string companyName)
         {
             // arrange
             RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
-            RestRequest request = new RestRequest($"/companies/id/{1}", Method.GET);
+            RestRequest request = new RestRequest($"/companies/id/{companyId}", Method.GET);
 
             // act
             request.AddHeader("authorization", "Bearer " + _token);
@@ -185,12 +185,10 @@ namespace Derivco_API_tests_Doroshchuk.Tests
                                 Deserialize<Company>(response);
 
             // assert
-            Assert.AreEqual("TestCompany", companyResponse.Name);
+            Assert.AreEqual(companyName, companyResponse.Name);
         }
 
-        [TestCase(1, HttpStatusCode.OK, TestName = "Verify 'OK' status code after deleting company with id 1")]
-        [TestCase(2, HttpStatusCode.OK, TestName = "Verify 'OK' status code after deleting company with id 2")]
-        [TestCase(3, HttpStatusCode.OK, TestName = "Verify 'OK' status code after deleting company with id 3")]
+        [TestCase(4, HttpStatusCode.OK)]
         public void DeleteCompanyById_VerifyStatusCode(int companyId, HttpStatusCode expectedHttpStatusCode)
         {
             // arrange
@@ -205,7 +203,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             Assert.That(response.StatusCode, Is.EqualTo(expectedHttpStatusCode));
         }
 
-        [TestCase(1, TestName = "Verify company with id 1 is deleted")]
+        [TestCase(1)]
         public void DeleteCompanyById_VerifyCompanyIsDeleted(int companyId)
         {
             // arrange
