@@ -64,5 +64,39 @@ namespace Derivco_API_tests_Doroshchuk.Tests
 
             Assert.AreEqual(actualEmployeeList.FindAll(x => x.Name == employeeName).Count(), 1);
         }
+
+        [Test]
+        public void GetAllEmployees_StatusCodeIsOK()
+        {
+            IRestResponse response = _resource.GetAll();
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        }
+
+        [Test]
+        public void GetAllEmployees_IsTrue_ActualEmployeeListEqualsExpectedEmployeeList()
+        {
+            var employeeList = new List<Employee>()
+            {
+                new Employee()
+                {
+                    Name = "TestEmployee1"
+                },
+                new Employee()
+                {
+                    Name = "TestEmployee1"
+                },
+                new Employee()
+                {
+                    Name = "TestEmployee1"
+                }
+            };
+            employeeList.ForEach(employee => _resource.Create(employee.Name));
+            employeeList.ForEach(employee => employee.Id = _resource.GetIdByName(employee.Name));
+            List<Employee> actualEmployeeList = _resource.GetEmployees();
+
+            Assert.True(actualEmployeeList.Count == employeeList.Count
+                            && actualEmployeeList.All(employeeList.Contains));
+        }
     }
 }
