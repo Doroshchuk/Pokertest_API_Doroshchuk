@@ -16,8 +16,8 @@ namespace Derivco_API_tests_Doroshchuk.Tests
     [TestFixture]
     public class TestsCompanyAPI : BaseTestsAPI
     {
-        [Test]
-        public void CreateCompany_StatusCodeAsExpected()
+        [TestCase("TestCompany1", TestName = "Verify creating of the company with id 1")]
+        public void CreateCompany_StatusCodeIsOK_ValidCompanyNameIsGiven(string companyName)
         {
             // arrange
             RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
@@ -28,7 +28,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             request.AddJsonBody(
                 new
                 {
-                    Name = "TestCompany"
+                    Name = companyName
                 });
             IRestResponse response = client.Execute(request);
 
