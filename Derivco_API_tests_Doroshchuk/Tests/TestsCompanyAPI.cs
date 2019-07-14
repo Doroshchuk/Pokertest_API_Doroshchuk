@@ -44,7 +44,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         }
 
         [TestCase("TestCompany1")]
-        public void CreateCompany_StatusCodeIsUnauthorized_ValidCompanyNameAndEmptyTokenAreGiven(string companyName)
+        public void CreateCompany_StatusCodeIsUnauthorized_EmptyTokenIsGiven(string companyName)
         {
             _resource.Token = "";
             IRestResponse response = _resource.Create(companyName);
