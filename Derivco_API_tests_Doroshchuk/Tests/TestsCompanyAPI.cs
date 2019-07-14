@@ -92,7 +92,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
                 }
             };
             companyList.ForEach(company => _resource.Create(company.Name));
-            companyList.ForEach(company => company.Id = _resource.GetCompanyIdByName(company.Name));
+            companyList.ForEach(company => company.Id = _resource.GeIdByName(company.Name));
             List<Company> actualCompanyList = _resource.GetCompanies();
 
             Assert.True(actualCompanyList.Count == companyList.Count
@@ -113,7 +113,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         {
             string companyName = "TestCompany";
             _resource.Create(companyName);
-            int companyId = _resource.GetCompanyIdByName(companyName);
+            int companyId = _resource.GeIdByName(companyName);
             IRestResponse response = _resource.GetById(companyId);
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
@@ -124,7 +124,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         {
             string companyName = "TestCompany";
             _resource.Create(companyName);
-            int companyId = _resource.GetCompanyIdByName(companyName);
+            int companyId = _resource.GeIdByName(companyName);
             IRestResponse response = _resource.GetById(companyId);
             Company companyResponse =
                         new JsonDeserializer().
@@ -146,7 +146,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         {
             string companyName = "TestCompany";
             _resource.Create(companyName);
-            int companyId = _resource.GetCompanyIdByName(companyName);
+            int companyId = _resource.GeIdByName(companyName);
             IRestResponse response = _resource.DeleteById(companyId);
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
@@ -157,7 +157,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         {
             string companyName = "TestCompany";
             _resource.Create(companyName);
-            int companyId = _resource.GetCompanyIdByName(companyName);
+            int companyId = _resource.GeIdByName(companyName);
             IRestResponse response = _resource.DeleteById(companyId);
             List<Company> actualCompanyList = _resource.GetCompanies();
 

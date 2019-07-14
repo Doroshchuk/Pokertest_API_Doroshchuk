@@ -16,10 +16,10 @@ namespace Derivco_API_tests_Doroshchuk.Resource
         }
 
         // TODO : replace with GetIdByName() api method when it will be ready
-        public int GetCompanyIdByName(string companyName)
+        public override int GeIdByName(string name)
         {
             var companies = GetCompanies();
-            return companies.First(x => x.Name == companyName).Id;
+            return companies.First(x => x.Name == name).Id;
         }
 
         public List<Company> GetCompanies()
@@ -30,7 +30,7 @@ namespace Derivco_API_tests_Doroshchuk.Resource
         }
 
         // TODO : replace with DeleteAll() api method when it will be ready
-        public void DeleteAll()
+        public override void DeleteAll()
         {
             var companies = GetCompanies();
             companies.ForEach(company => DeleteById(company.Id));

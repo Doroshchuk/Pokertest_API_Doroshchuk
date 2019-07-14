@@ -58,5 +58,9 @@ namespace Derivco_API_tests_Doroshchuk.Resource
             request.AddHeader("authorization", "Bearer " + _token);
             return _client.Execute(request);
         }
+
+        public abstract void DeleteAll();
+
+        public abstract int GetIdByName(string name);
     }
 }

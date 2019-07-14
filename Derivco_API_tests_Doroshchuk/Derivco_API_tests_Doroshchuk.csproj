@@ -64,6 +64,7 @@
     <Compile Include="Resource\Resource.cs" />
     <Compile Include="Tests\BaseTestsAPI.cs" />
     <Compile Include="Tests\TestsCompanyAPI.cs" />
+    <Compile Include="Tests\TestsEmployeeAPI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
