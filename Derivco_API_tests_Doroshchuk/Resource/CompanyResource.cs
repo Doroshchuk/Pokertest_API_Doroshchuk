@@ -16,7 +16,7 @@ namespace Derivco_API_tests_Doroshchuk.Resource
         }
 
         // TODO : replace with GetIdByName() api method when it will be ready
-        public override int GeIdByName(string name)
+        public override int GetIdByName(string name)
         {
             var companies = GetCompanies();
             return companies.First(x => x.Name == name).Id;

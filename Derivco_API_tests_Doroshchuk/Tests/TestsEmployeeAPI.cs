@@ -2,6 +2,7 @@
 using Derivco_API_tests_Doroshchuk.Resource;
 using NUnit.Framework;
 using RestSharp;
+using RestSharp.Serialization.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -97,6 +98,40 @@ namespace Derivco_API_tests_Doroshchuk.Tests
 
             Assert.True(actualEmployeeList.Count == employeeList.Count
                             && actualEmployeeList.All(employeeList.Contains));
+        }
+
+        [TestCase(0)]
+        [TestCase(-5)]
+        public void GetEmployeeById_StatusCodeIsNotFound_InvalidIdIsGiven(int employeeId)
+        {
+            IRestResponse response = _resource.GetById(employeeId); ;
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        }
+
+        [Test]
+        public void GetEmployeeById_StatusCodeIsOK_ValidIdIsGiven()
+        {
+            string employeeName = "TestEmployee";
+            _resource.Create(employeeName);
+            int employeeId = _resource.GetIdByName(employeeName);
+            IRestResponse response = _resource.GetById(employeeId);
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        }
+
+        [Test]
+        public void GetEmployeeyById_EmployeeNameAsExpected_ValidIdIsGiven()
+        {
+            string employeeName = "TestEmployee";
+            _resource.Create(employeeName);
+            int employeeId = _resource.GetIdByName(employeeName);
+            IRestResponse response = _resource.GetById(employeeId);
+            Employee employeeResponse =
+                        new JsonDeserializer().
+                                Deserialize<Employee>(response);
+
+            Assert.AreEqual(employeeName, employeeResponse.Name);
         }
     }
 }
