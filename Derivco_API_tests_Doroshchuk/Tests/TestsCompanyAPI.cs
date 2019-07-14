@@ -1,4 +1,6 @@
 ﻿using Derivco_API_tests_Doroshchuk.DataEntity;
+using Derivco_API_tests_Doroshchuk.Helpers;
+using Derivco_API_tests_Doroshchuk.Resource;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -16,24 +18,25 @@ namespace Derivco_API_tests_Doroshchuk.Tests
     [TestFixture]
     public class TestsCompanyAPI : BaseTestsAPI
     {
+        private CompanyResource _resource;
+
+        [OneTimeSetUp]
+        public void RunBeforeTests()
+        {
+            _resource = new CompanyResource(_token);
+        }
+
+        [TearDown]
+        public void RunAfterEachTest()
+        {
+            _resource.DeleteAll();
+        }
+
         [TestCase("TestCompany1")]
-        [Order(1)]
         public void CreateCompany_StatusCodeIsOK_ValidCompanyNameIsGiven(string companyName)
         {
-            // arrange
-            RestClient client = new RestClient($"{_baseURL}/api/automation");
-            RestRequest request = new RestRequest("/companies", Method.POST);
+            IRestResponse response = _resource.Create(companyName);
 
-            // act
-            request.AddHeader("authorization", "Bearer " + _token);
-            request.AddJsonBody(
-                new
-                {
-                    Name = companyName
-                });
-            IRestResponse response = client.Execute(request);
-
-            // assert
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
@@ -42,7 +45,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         public void CreateCompany_CompanyIsAdded_ValidCompanyNameIsGiven(string companyName)
         {
             // arrange
-            RestClient client = new RestClient($"{_baseURL}/api/automation");
+            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
             RestRequest createRequest = new RestRequest("/companies", Method.POST);
             RestRequest getAllRequest = new RestRequest("/companies", Method.GET);
 
@@ -68,7 +71,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         public void CreateCompany_StatusCodeIsBadRequest_ExistedCompanyNameIsGiven(string companyName)
         {
             // arrange
-            RestClient client = new RestClient($"{_baseURL}/api/automation");
+            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
             RestRequest request = new RestRequest("/companies", Method.POST);
 
             // act
@@ -90,7 +93,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         public void CreateCompany_CompanyIsAdddedOnce_ExistedCompanyNameIsGiven(string companyName)
         {
             // arrange
-            RestClient client = new RestClient($"{_baseURL}/api/automation");
+            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
             RestRequest createRequest = new RestRequest("/companies", Method.POST);
             RestRequest getAllRequest = new RestRequest("/companies", Method.GET);
 
@@ -117,7 +120,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         public void GetAllCompanies_StatusCodeIsOK()
         {
             // arrange
-            RestClient client = new RestClient($"{_baseURL}/api/automation");
+            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
             RestRequest request = new RestRequest("/companies", Method.GET);
 
             // act
@@ -151,7 +154,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
                 }
             };
             // arrange
-            RestClient client = new RestClient($"{_baseURL}/api/automation");
+            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
             RestRequest request = new RestRequest("/companies", Method.GET);
 
             // act
@@ -172,7 +175,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         public void GetCompanyById_VerifyStatusCode(int companyId, HttpStatusCode expectedHttpStatusCode)
         {
             // arrange
-            RestClient client = new RestClient($"{_baseURL}/api/automation");
+            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
             RestRequest request = new RestRequest($"/companies/id/{companyId}", Method.GET);
 
             // act
@@ -188,7 +191,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         public void GetCompanyById_ActualCompanyNameAsExpected_ValidIdIsGiven(int companyId, string companyName)
         {
             // arrange
-            RestClient client = new RestClient($"{_baseURL}/api/automation");
+            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
             RestRequest request = new RestRequest($"/companies/id/{companyId}", Method.GET);
 
             // act
@@ -209,7 +212,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         public void DeleteCompanyById_VerifyStatusCode(int companyId, HttpStatusCode expectedHttpStatusCode)
         {
             // arrange
-            RestClient client = new RestClient($"{_baseURL}/api/automation");
+            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
             RestRequest request = new RestRequest($"/companies/id/{companyId}", Method.DELETE);
 
             // act
@@ -225,7 +228,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         public void DeleteCompanyById_VerifyCompanyIsDeleted(int companyId)
         {
             // arrange
-            RestClient client = new RestClient($"{_baseURL}/api/automation");
+            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
             RestRequest deleteRequest = new RestRequest($"/companies/id/{companyId}", Method.DELETE);
             RestRequest getRequest = new RestRequest($"/companies/id/{companyId}", Method.GET);
 
