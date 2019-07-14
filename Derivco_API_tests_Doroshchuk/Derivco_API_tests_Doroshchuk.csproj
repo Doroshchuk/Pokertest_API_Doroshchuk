@@ -60,6 +60,8 @@
     <Compile Include="Helper\Constant.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource\CompanyResource.cs" />
+    <Compile Include="Resource\EmployeeResource.cs" />
+    <Compile Include="Resource\Resource.cs" />
     <Compile Include="Tests\BaseTestsAPI.cs" />
     <Compile Include="Tests\TestsCompanyAPI.cs" />
   </ItemGroup>
