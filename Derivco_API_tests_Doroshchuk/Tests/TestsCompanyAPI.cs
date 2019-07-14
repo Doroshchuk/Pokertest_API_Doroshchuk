@@ -69,56 +69,37 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         }
 
         [Test]
-        [Order(5)]
         public void GetAllCompanies_StatusCodeIsOK()
         {
-            // arrange
-            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
-            RestRequest request = new RestRequest("/companies", Method.GET);
+            IRestResponse response = _resource.GetAll();
 
-            // act
-            request.AddHeader("authorization", "Bearer " + _token);
-            IRestResponse response = client.Execute(request);
-
-            // assert
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
         [Test]
-        [Order(6)]
         public void GetAllCompanies_IsTrue_ActualCompanyListEqualsExpectedCompanyList()
         {
-            var expectedCompanyList = new List<Company>()
+            var companyList = new List<Company>()
             {
                 new Company()
                 {
-                    Id = 14,
                     Name = "TestCompany1"
                 },
                 new Company()
                 {
-                    Id = 15,
                     Name = "TestCompany2"
                 },
                 new Company()
                 {
-                    Id = 16,
                     Name = "TestCompany3"
                 }
             };
-            // arrange
-            RestClient client = new RestClient($"{Constant.BaseURL}/api/automation");
-            RestRequest request = new RestRequest("/companies", Method.GET);
+            companyList.ForEach(company => _resource.Create(company.Name));
+            companyList.ForEach(company => company.Id = _resource.GetCompanyIdByName(company.Name));
+            List<Company> actualCompanyList = _resource.GetCompanies();
 
-            // act
-            request.AddHeader("authorization", "Bearer " + _token);
-            IRestResponse response = client.Execute(request);
-
-            // assert
-            JArray jsonResponse = (JArray)JsonConvert.DeserializeObject(response.Content);
-            var actualCompanyList = JsonConvert.DeserializeObject<List<Company>>(jsonResponse.ToString());
-            Assert.True(actualCompanyList.Count == expectedCompanyList.Count 
-                            && actualCompanyList.All(expectedCompanyList.Contains));
+            Assert.True(actualCompanyList.Count == companyList.Count
+                            && actualCompanyList.All(companyList.Contains));
         }
 
         [TestCase(11, HttpStatusCode.OK, TestName = "Verify 'OK' status code for company with id 11")]
