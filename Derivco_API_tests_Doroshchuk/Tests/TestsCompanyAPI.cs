@@ -28,7 +28,7 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             request.AddJsonBody(
                 new
                 {
-                    Name = "TestCompany1"
+                    Name = "TestCompany"
                 });
             IRestResponse response = client.Execute(request);
 
@@ -114,6 +114,23 @@ namespace Derivco_API_tests_Doroshchuk.Tests
 
             // assert
             Assert.AreEqual("TestCompany", companyResponse.Name);
+        }
+
+        [TestCase(1, HttpStatusCode.OK, TestName = "Verify 'OK' status code after deleting company with id 1")]
+        [TestCase(2, HttpStatusCode.OK, TestName = "Verify 'OK' status code after deleting company with id 2")]
+        [TestCase(3, HttpStatusCode.OK, TestName = "Verify 'OK' status code after deleting company with id 3")]
+        public void DeleteCompanyById_VerifyStatusCode(int companyId, HttpStatusCode expectedHttpStatusCode)
+        {
+            // arrange
+            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestRequest request = new RestRequest($"/companies/id/{companyId}", Method.DELETE);
+
+            // act
+            request.AddHeader("authorization", "Bearer " + _token);
+            IRestResponse response = client.Execute(request);
+
+            // assert
+            Assert.That(response.StatusCode, Is.EqualTo(expectedHttpStatusCode));
         }
     }
 }
