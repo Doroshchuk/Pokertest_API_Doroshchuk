@@ -85,11 +85,11 @@ namespace Derivco_API_tests_Doroshchuk.Tests
                 },
                 new Employee()
                 {
-                    Name = "TestEmployee1"
+                    Name = "TestEmployee2"
                 },
                 new Employee()
                 {
-                    Name = "TestEmployee1"
+                    Name = "TestEmployee3"
                 }
             };
             employeeList.ForEach(employee => _resource.Create(employee.Name));
@@ -132,6 +132,37 @@ namespace Derivco_API_tests_Doroshchuk.Tests
                                 Deserialize<Employee>(response);
 
             Assert.AreEqual(employeeName, employeeResponse.Name);
+        }
+
+        [TestCase(-5)]
+        public void DeleteEmployeeById_StatusCodeIsNotFound_InvaliIdIsGiven(int employeeId)
+        {
+            IRestResponse response = _resource.DeleteById(employeeId);
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        }
+
+        [Test]
+        public void DeleteEmployeeById_StatusCodeIsOK_ValiIdIsGiven()
+        {
+            string employeeName = "TestEmployee";
+            _resource.Create(employeeName);
+            int employeeId = _resource.GetIdByName(employeeName);
+            IRestResponse response = _resource.DeleteById(employeeId);
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        }
+
+        [Test]
+        public void DeleteEmployeeById_VerifyEmployeeIsDeleted_ValidIdIsGiven()
+        {
+            string employeeName = "TestEmployee";
+            _resource.Create(employeeName);
+            int employeeId = _resource.GetIdByName(employeeName);
+            IRestResponse response = _resource.DeleteById(employeeId);
+            List<Employee> actualEmployeeList = _resource.GetEmployees();
+
+            Assert.IsFalse(actualEmployeeList.Exists(x => x.Name == employeeName));
         }
     }
 }
