@@ -136,17 +136,17 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             {
                 new Company()
                 {
-                    Id = "11",
+                    Id = "14",
                     Name = "TestCompany1"
                 },
                 new Company()
                 {
-                    Id = "12",
+                    Id = "15",
                     Name = "TestCompany2"
                 },
                 new Company()
                 {
-                    Id = "13",
+                    Id = "16",
                     Name = "TestCompany3"
                 }
             };
@@ -161,7 +161,8 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             // assert
             JArray jsonResponse = (JArray)JsonConvert.DeserializeObject(response.Content);
             var actualCompanyList = JsonConvert.DeserializeObject<List<Company>>(jsonResponse.ToString());
-            Assert.True(actualCompanyList.SequenceEqual(expectedCompanyList));
+            Assert.True(actualCompanyList.Count == expectedCompanyList.Count 
+                            && actualCompanyList.All(expectedCompanyList.Contains));
         }
 
         [TestCase(11, HttpStatusCode.OK, TestName = "Verify 'OK' status code for company with id 11")]
