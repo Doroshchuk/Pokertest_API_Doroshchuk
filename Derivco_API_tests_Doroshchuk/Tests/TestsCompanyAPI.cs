@@ -17,10 +17,11 @@ namespace Derivco_API_tests_Doroshchuk.Tests
     public class TestsCompanyAPI : BaseTestsAPI
     {
         [TestCase("TestCompany1")]
+        [Order(1)]
         public void CreateCompany_StatusCodeIsOK_ValidCompanyNameIsGiven(string companyName)
         {
             // arrange
-            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestClient client = new RestClient($"{_baseURL}/api/automation");
             RestRequest request = new RestRequest("/companies", Method.POST);
 
             // act
@@ -37,10 +38,11 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         }
 
         [TestCase("TestCompany2")]
+        [Order(2)]
         public void CreateCompany_CompanyIsAdded_ValidCompanyNameIsGiven(string companyName)
         {
             // arrange
-            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestClient client = new RestClient($"{_baseURL}/api/automation");
             RestRequest createRequest = new RestRequest("/companies", Method.POST);
             RestRequest getAllRequest = new RestRequest("/companies", Method.GET);
 
@@ -61,11 +63,12 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             Assert.IsTrue(actualCompanyList.Exists(x => x.Name == companyName));
         }
 
-        [TestCase("TestCompany2")]
+        [TestCase("TestCompany3")]
+        [Order(3)]
         public void CreateCompany_StatusCodeIsBadRequest_ExistedCompanyNameIsGiven(string companyName)
         {
             // arrange
-            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestClient client = new RestClient($"{_baseURL}/api/automation");
             RestRequest request = new RestRequest("/companies", Method.POST);
 
             // act
@@ -83,10 +86,11 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         }
 
         [TestCase("TestCompany3")]
+        [Order(4)]
         public void CreateCompany_CompanyIsAdddedOnce_ExistedCompanyNameIsGiven(string companyName)
         {
             // arrange
-            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestClient client = new RestClient($"{_baseURL}/api/automation");
             RestRequest createRequest = new RestRequest("/companies", Method.POST);
             RestRequest getAllRequest = new RestRequest("/companies", Method.GET);
 
@@ -109,10 +113,11 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         }
 
         [Test]
+        [Order(5)]
         public void GetAllCompanies_StatusCodeIsOK()
         {
             // arrange
-            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestClient client = new RestClient($"{_baseURL}/api/automation");
             RestRequest request = new RestRequest("/companies", Method.GET);
 
             // act
@@ -124,23 +129,29 @@ namespace Derivco_API_tests_Doroshchuk.Tests
         }
 
         [Test]
+        [Order(6)]
         public void GetAllCompanies_IsTrue_ActualCompanyListEqualsExpectedCompanyList()
         {
             var expectedCompanyList = new List<Company>()
             {
                 new Company()
                 {
-                    Id = "1",
-                    Name = "TestCompany"
+                    Id = "11",
+                    Name = "TestCompany1"
                 },
                 new Company()
                 {
-                    Id = "2",
-                    Name = "TestCompany1"
+                    Id = "12",
+                    Name = "TestCompany2"
+                },
+                new Company()
+                {
+                    Id = "13",
+                    Name = "TestCompany3"
                 }
             };
             // arrange
-            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestClient client = new RestClient($"{_baseURL}/api/automation");
             RestRequest request = new RestRequest("/companies", Method.GET);
 
             // act
@@ -153,13 +164,14 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             Assert.True(actualCompanyList.SequenceEqual(expectedCompanyList));
         }
 
-        [TestCase(1, HttpStatusCode.OK, TestName = "Verify 'OK' status code for company with id 1")]
+        [TestCase(11, HttpStatusCode.OK, TestName = "Verify 'OK' status code for company with id 11")]
         [TestCase(0, HttpStatusCode.NotFound, TestName = "Verify 'Not Found' status code for company with id 0")]
         [TestCase(-5, HttpStatusCode.NotFound, TestName = "Verify 'Not Found' status code for company with id -5")]
+        [Order(7)]
         public void GetCompanyById_VerifyStatusCode(int companyId, HttpStatusCode expectedHttpStatusCode)
         {
             // arrange
-            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestClient client = new RestClient($"{_baseURL}/api/automation");
             RestRequest request = new RestRequest($"/companies/id/{companyId}", Method.GET);
 
             // act
@@ -170,11 +182,12 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             Assert.That(response.StatusCode, Is.EqualTo(expectedHttpStatusCode));
         }
 
-        [TestCase(1, "TestCompany")]
+        [TestCase(11, "TestCompany1")]
+        [Order(8)]
         public void GetCompanyById_ActualCompanyNameAsExpected_ValidIdIsGiven(int companyId, string companyName)
         {
             // arrange
-            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestClient client = new RestClient($"{_baseURL}/api/automation");
             RestRequest request = new RestRequest($"/companies/id/{companyId}", Method.GET);
 
             // act
@@ -188,11 +201,14 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             Assert.AreEqual(companyName, companyResponse.Name);
         }
 
-        [TestCase(4, HttpStatusCode.OK)]
+        [TestCase(11, HttpStatusCode.OK)]
+        [TestCase(12, HttpStatusCode.OK)]
+        [TestCase(-5, HttpStatusCode.NotFound)]
+        [Order(9)]
         public void DeleteCompanyById_VerifyStatusCode(int companyId, HttpStatusCode expectedHttpStatusCode)
         {
             // arrange
-            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestClient client = new RestClient($"{_baseURL}/api/automation");
             RestRequest request = new RestRequest($"/companies/id/{companyId}", Method.DELETE);
 
             // act
@@ -203,11 +219,12 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             Assert.That(response.StatusCode, Is.EqualTo(expectedHttpStatusCode));
         }
 
-        [TestCase(1)]
+        [TestCase(13)]
+        [Order(10)]
         public void DeleteCompanyById_VerifyCompanyIsDeleted(int companyId)
         {
             // arrange
-            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestClient client = new RestClient($"{_baseURL}/api/automation");
             RestRequest deleteRequest = new RestRequest($"/companies/id/{companyId}", Method.DELETE);
             RestRequest getRequest = new RestRequest($"/companies/id/{companyId}", Method.GET);
 

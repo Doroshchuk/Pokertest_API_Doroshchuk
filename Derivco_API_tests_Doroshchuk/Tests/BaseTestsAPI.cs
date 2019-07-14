@@ -13,11 +13,12 @@ namespace Derivco_API_tests_Doroshchuk.Tests
     public class BaseTestsAPI
     {
         protected string _token;
+        protected string _baseURL = "https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi";
 
         [OneTimeSetUp]
         public void RunBeforeAnyTests()
         {
-            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/token");
+            RestClient client = new RestClient($"{_baseURL}/token");
             RestRequest request = new RestRequest(Method.POST);
 
             request.AddParameter("username", "testName");
