@@ -136,17 +136,17 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             {
                 new Company()
                 {
-                    Id = "14",
+                    Id = 14,
                     Name = "TestCompany1"
                 },
                 new Company()
                 {
-                    Id = "15",
+                    Id = 15,
                     Name = "TestCompany2"
                 },
                 new Company()
                 {
-                    Id = "16",
+                    Id = 16,
                     Name = "TestCompany3"
                 }
             };

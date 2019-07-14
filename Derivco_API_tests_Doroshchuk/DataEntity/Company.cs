@@ -10,7 +10,7 @@ namespace Derivco_API_tests_Doroshchuk.DataEntity
     public class Company
     {
         [JsonProperty("Id")]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [JsonProperty("Name")]
         public string Name { get; set; }
