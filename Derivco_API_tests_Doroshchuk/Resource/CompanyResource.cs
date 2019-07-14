@@ -11,7 +11,7 @@ namespace Derivco_API_tests_Doroshchuk.Resource
 {
     public class CompanyResource : Resource
     {
-        public CompanyResource(string token) : base(token, "/companies")
+        public CompanyResource(string token) : base(token, Constant.CompanyResource)
         {
         }
 

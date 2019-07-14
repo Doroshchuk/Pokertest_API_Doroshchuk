@@ -13,7 +13,7 @@ namespace Derivco_API_tests_Doroshchuk.Resource
 {
     public class EmployeeResource : Resource
     {
-        public EmployeeResource(string token) : base(token, "/employees")
+        public EmployeeResource(string token) : base(token, Constant.EmployeeResource)
         {
         }
 
