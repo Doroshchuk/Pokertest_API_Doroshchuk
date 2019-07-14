@@ -132,5 +132,23 @@ namespace Derivco_API_tests_Doroshchuk.Tests
             // assert
             Assert.That(response.StatusCode, Is.EqualTo(expectedHttpStatusCode));
         }
+
+        [TestCase(1, TestName = "Verify company with id 1 is deleted")]
+        public void DeleteCompanyById_VerifyCompanyIsDeleted(int companyId)
+        {
+            // arrange
+            RestClient client = new RestClient("https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi/api/automation");
+            RestRequest deleteRequest = new RestRequest($"/companies/id/{companyId}", Method.DELETE);
+            RestRequest getRequest = new RestRequest($"/companies/id/{companyId}", Method.GET);
+
+            // act
+            deleteRequest.AddHeader("authorization", "Bearer " + _token);
+            getRequest.AddHeader("authorization", "Bearer " + _token);
+            client.Execute(deleteRequest);
+            IRestResponse response = client.Execute(getRequest);
+
+            // assert
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        }
     }
 }
